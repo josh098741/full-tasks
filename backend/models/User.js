@@ -20,20 +20,20 @@ const UserSchema = new mongoose.Schema({
 })
 
 UserSchema.pre("save",async function(next){
-    if(!this.isModified("password")) return next();
+    if(!this.isModified("password"))return next();
     this.password = await bcrypt.hash(this.password, 10);
     next();
-});
+})
 
 UserSchema.methods.comparePassword = async function(enteredPassword){
-    return await bcrypt.compare(enteredPassword, this.password);
-};
+    return await bcrypt.compare(enteredPassword, this.password)
+}
 
 UserSchema.methods.generateAuthToken = function(){
     return jwt.sign(
         {id: this._id, username: this.username},
         process.env.JWT_SECRET,
-        {expiresIn: process.env.JWT_DATE}
+        {expiresIn: JWT_DATE}
     );
 };
 
