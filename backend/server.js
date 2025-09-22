@@ -5,10 +5,14 @@ const cors = require('cors');
 const app = express();
 
 const connectDB = require('./db/connect')
+const authentication = require('./routes/authRoutes');
+const tasks = require('./routes/taskRoutes')
 
 app.use(express.json())
 app.use(cors())
 
+app.use('/api/auth',authentication);
+app.use('/api/task',tasks);
 
 const PORT = process.env.port || 5000
 
