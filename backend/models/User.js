@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: [true, "Please enter username"],
+        required: [false, "Please enter username"],
         unique: true
     },
     password: {
@@ -33,7 +33,7 @@ UserSchema.methods.generateAuthToken = function(){
     return jwt.sign(
         {id: this._id, username: this.username},
         process.env.JWT_SECRET,
-        {expiresIn: JWT_DATE}
+        {expiresIn: process.env.JWT_DATE}
     );
 };
 
