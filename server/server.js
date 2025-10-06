@@ -5,11 +5,12 @@ const cors = require('cors')
 const app = express()
 
 const connectDB = require('./configs/mongoosedb')
+const taskRoutes = require('./routers/taskRouter')
 
 app.use(cors())
 app.use(express.json())
 
-
+app.use('/api/task',taskRoutes)
 
 const PORT = process.env.PORT || 5000
 const MONGO_URI = process.env.MONGO_URI
