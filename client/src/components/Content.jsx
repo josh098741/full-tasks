@@ -6,6 +6,7 @@ function Content(){
     const [tasks, setTasks] = useState([])
 
     const handleAddTask = () => {
+        if(task.trim() === "") return
         setTasks([...tasks,task])
         setTask("")
     }
