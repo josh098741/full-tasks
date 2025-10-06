@@ -2,7 +2,7 @@ const Task = require('../models/Task')
 
 const createTask = async (req,res) => {
     try{
-        const task = await Task.create()
+        const task = await Task.create({name: req.body.name})
         res.status(201).json({success: true, data: task})
     }catch(error){
         res.status(500).json({success: false, message: "There was an error in create task"})
