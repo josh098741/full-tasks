@@ -1,19 +1,47 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
+import axios from 'axios'
 
 function Content(){
 
     const [task, setTask] = useState("")
     const [tasks, setTasks] = useState([])
+    const [loading, setLoading] = useState(false)
 
-    const handleAddTask = () => {
-        if(task.trim() === "") return
-        setTasks([...tasks,task])
-        setTask("")
+    const API_URL = "http://localhost:5000/api/task"
+
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try{
+                setLoading(true)
+                const res = await axios.get(API_URL)
+                setTasks(res.data.data || [])
+            }catch(error){
+                console.log("There was an error in fettching tasks",error)
+            }finally{
+                setLoading(false)
+            }
+        }
+        fetchTasks()
+    },[])
+
+    const handleAddTask = async () => {
+        if(task.trim() === "") return;
+        try{
+            const res = await axios.post(API_URL, {name: task})
+            setTasks([...tasks, res.data.data])
+            setTask("")
+        }catch(error){
+            console.log("There was an error in adding task",error.message)
+        }
     }
 
     const handleDeleteTask = (indexToDelete) => {
         const updatedTasks = tasks.filter((_,index) => index !== indexToDelete)
         setTasks(updatedTasks)
+    }
+
+    if(loading){
+        <div>Loading</div>
     }
 
     return(
@@ -33,10 +61,10 @@ function Content(){
                     {
                         tasks.length === 0 ? (
                             <div className="border text-center mx-2 h-11 flex justify-center items-center bg-black text-white font-bold text-xl rounded-lg">No tasks Yet</div>
-                        ) : tasks.map((item, index) => (
-                            <div key={index} className="border text-center mx-2 h-11 flex justify-between px-3 items-center bg-black text-white font-bold text-xl rounded-lg">
-                                <span>{item}</span>
-                                <button onClick={() => handleDeleteTask(index)} className="bg-blue-500 hover:bg-red-600 rounded-full p-1 transition-colors">🗑️</button>
+                        ) : tasks.map((item) => (
+                            <div key={item._id} className="border text-center mx-2 h-11 flex justify-between px-3 items-center bg-black text-white font-bold text-xl rounded-lg">
+                                <span>{item.name}</span>
+                                <button onClick={() => handleDeleteTask(item._id)} className="bg-blue-500 hover:bg-red-600 rounded-full p-1 transition-colors">🗑️</button>
                             </div>
                         ))
                     }
