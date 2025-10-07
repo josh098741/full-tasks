@@ -35,9 +35,13 @@ function Content(){
         }
     }
 
-    const handleDeleteTask = (indexToDelete) => {
-        const updatedTasks = tasks.filter((_,index) => index !== indexToDelete)
-        setTasks(updatedTasks)
+    const handleDeleteTask = async (id) => {
+        try{
+            await axios.delete(`${API_URL}/${id}`)
+            setTasks(tasks.filter((t) => t._id !== id))
+        }catch(error){
+            console.log("There was ana error in deleting tasks",error)
+        }
     }
 
     if(loading){
